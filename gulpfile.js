@@ -55,7 +55,8 @@ gulp.task('minify-css', function () {
    .pipe(rename({
     suffix: '.min'
   }))
-   .pipe(gulp.dest('./dist/min/css')); // destination of your minified CSS files
+   .pipe(gulp.dest('./dist/min/css')) // destination of your minified CSS files
+   .pipe(browserSync.stream());
 });
 
 // ---------------------------------------------- Minify JS
@@ -65,14 +66,17 @@ gulp.task('compressJS', function () {
     .pipe(rename({
         suffix: '.min'
       }))
-    .pipe(gulp.dest('./dist/min/js/plugins')); // destination of your minified JS files
+    .pipe(gulp.dest('./dist/min/js/plugins')) // destination of your minified JS files
+    .pipe(browserSync.stream());
+
 });
 
 // ---------------------------------------------- Concat the JS in one file
 gulp.task('scripts', function() {
   return gulp.src('./dist/min/js/plugins/*.js')
     .pipe(concat('all.js'))
-    .pipe(gulp.dest('./dist/min/js/'));
+    .pipe(gulp.dest('./dist/min/js/'))
+    .pipe(browserSync.stream());
 });
 
 // ---------------------------------------------- Image optimization 
@@ -90,6 +94,7 @@ gulp.task('image-min', function () {
           })
       ]))
         .pipe(gulp.dest('./assets/img-opt/'))
+        .pipe(browserSync.stream());
 });
 
 // ----------------------------------------------- Gulp Testing Message
