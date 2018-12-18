@@ -1,6 +1,7 @@
 // =========================================================
 // gulpfile.js
-// Author : Adrian Moloca
+// Release: December 2018
+// Author: Adrian Moloca
 // =========================================================
 // ------------------------------------------------ requires
 
@@ -31,10 +32,11 @@ var paths = {
 //  GULP TASKS AND PLUGINS
 
 // ---------------------------------------------- Static server
-gulp.task('browser-sync', function() {
+gulp.task('browserSync', function() {
     browserSync.init({
         server: {
-            baseDir: "./" //root directory of your project - where your index file is located
+            baseDir: "./",
+            index : "index.html" //root directory of your project - where your index file is located
         }
     });
 });
@@ -70,7 +72,7 @@ gulp.task('compressJS', function () {
 gulp.task('scripts', function() {
   return gulp.src('./dist/min/js/plugins/*.js')
     .pipe(concat('all.js'))
-    .pipe(gulp.dest('./dist/'));
+    .pipe(gulp.dest('./dist/min/js/'));
 });
 
 // ---------------------------------------------- Image optimization 
@@ -98,6 +100,11 @@ gulp.task('message', function(){
 // -------------------------------------------------- Gulp Watch
 gulp.task('watch:styles', function () {
   gulp.watch(paths.sass.src, gulp.series('sass'));
+  gulp.watch('./dist/clean/css/*.css', gulp.series('minify-css'));
+  gulp.watch('./dist/clean/js/plugins/*.js', gulp.series('compressJS'));
+  gulp.watch('./dist/min/js/plugins/*.js', gulp.series('scripts'));
+  gulp.watch('./assets/img/*.*', gulp.series('image-min'));
+  gulp.watch('./*.html', browserSync.reload);
 });
 
 gulp.task('watch', gulp.series('sass',
@@ -106,5 +113,5 @@ gulp.task('watch', gulp.series('sass',
 
 // ---------------------------------------------- Default task
 gulp.task('default', gulp.series('sass', 
-  gulp.parallel('message', 'minify-css' , 'compressJS', 'scripts', 'image-min', 'browser-sync', 'watch')
+  gulp.parallel('message', 'watch', 'browserSync')
 ));
