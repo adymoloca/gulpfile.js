@@ -8,13 +8,13 @@
 'use strict';
 
 var gulp = require('gulp'),
-    browserSync = require('browser-sync').create(); // browser Syncronization and reloading 
-var rename = require('gulp-rename'); //add the suffix -min- to your CSS and JS files
-var sass = require('gulp-sass'); //convert SASS files into CSS files
-var cleanCSS = require('gulp-clean-css'); // minify the CSS files
-var minifyJS = require("gulp-uglify"); // minify the JS files
-var concat = require('gulp-concat'); // create a single file from JS files - better optimization
-var imagemin = require('gulp-imagemin'); // Image optimization task
+    browserSync = require('browser-sync').create(), // browser Syncronization and reloading 
+    rename = require('gulp-rename'), //add the suffix -min- to your CSS and JS files
+    sass = require('gulp-sass'), //convert SASS files into CSS files
+    cleanCSS = require('gulp-clean-css'), // minify the CSS files
+    minifyJS = require("gulp-uglify"), // minify the JS files
+    concat = require('gulp-concat'), // create a single file from JS files - better optimization
+    imagemin = require('gulp-imagemin'); // Image optimization task
     
 
 // ------------------------------------------------- configs
@@ -103,20 +103,18 @@ gulp.task('message', function(){
 });
 
 // -------------------------------------------------- Gulp Watch
-gulp.task('watch:styles', function () {
-  gulp.watch(paths.sass.src, gulp.series('sass'));
-  gulp.watch('./dist/clean/css/*.css', gulp.series('minify-css'));
-  gulp.watch('./dist/clean/js/plugins/*.js', gulp.series('compressJS'));
-  gulp.watch('./dist/min/js/plugins/*.js', gulp.series('scripts'));
-  gulp.watch('./assets/img/*.*', gulp.series('image-min'));
+
+gulp.task('run', ['sass', 'minify-css', 'compressJS', 'scripts', 'image-min', 'browserSync']);
+
+gulp.task('watch', function () {
+  gulp.watch(paths.sass.src, ['sass']);
+  gulp.watch('./dist/clean/css/*.css', ['minify-css']);
+  gulp.watch('./dist/clean/js/plugins/*.js', ['compressJS']);
+  gulp.watch('./dist/min/js/plugins/*.js', ['scripts']);
+  gulp.watch('./assets/img/*.*', ['image-min']);
   gulp.watch('./*.html', browserSync.reload);
 });
 
-gulp.task('watch', gulp.series('sass',
-  gulp.parallel('watch:styles')
-));
 
 // ---------------------------------------------- Default task
-gulp.task('default', gulp.series('sass', 
-  gulp.parallel('message', 'watch', 'browserSync')
-));
+gulp.task('default',['run', 'watch']);
