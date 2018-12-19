@@ -20,8 +20,8 @@ var gulp = require('gulp'),
 // ------------------------------------------------- configs
 var paths = {
   sass: {
-    src: './sass/**/*.{scss,sass}', //source of your SASS files
-    dest: './dist/clean/css', //destination where you want to be your CSS files
+    src: './src/sass/eliza-app.sass', //source of your SASS files
+    dest: './build/css/', //destination where you want to be your CSS files
     opts: {
 
     }
@@ -50,38 +50,38 @@ gulp.task('sass', function () {
 
 // ---------------------------------------------- Minify CSS
 gulp.task('minify-css', function () {
-    return gulp.src('./dist/clean/css/*.css') //source of your CSS files
+    return gulp.src('./build/css/eliza-app.css') //source of your CSS files
    .pipe(cleanCSS())
    .pipe(rename({
     suffix: '.min'
   }))
-   .pipe(gulp.dest('./dist/min/css')) // destination of your minified CSS files
+   .pipe(gulp.dest('./dist/css/')) // destination of your minified CSS files
    .pipe(browserSync.stream());
 });
 
 // ---------------------------------------------- Minify JS
 gulp.task('compressJS', function () {
-    gulp.src('./dist/clean/js/plugins/*.js') //source of your JS files
+    gulp.src('./src/pluginsJS/*.js') //source of your JS files
     .pipe(minifyJS())
     .pipe(rename({
         suffix: '.min'
       }))
-    .pipe(gulp.dest('./dist/min/js/plugins')) // destination of your minified JS files
+    .pipe(gulp.dest('./build/js/')) // destination of your minified JS files
     .pipe(browserSync.stream());
 
 });
 
 // ---------------------------------------------- Concat the JS in one file
 gulp.task('scripts', function() {
-  return gulp.src('./dist/min/js/plugins/*.js')
+  return gulp.src('./build/js/*.js')
     .pipe(concat('all.js'))
-    .pipe(gulp.dest('./dist/min/js/'))
+    .pipe(gulp.dest('./dist/js/'))
     .pipe(browserSync.stream());
 });
 
 // ---------------------------------------------- Image optimization 
 gulp.task('image-min', function () {
-    gulp.src('./assets/img/*.*')
+    gulp.src('./src/img/*.*')
         .pipe(imagemin([
           imagemin.gifsicle({interlaced: true}),
           imagemin.jpegtran({progressive: true}),
@@ -93,7 +93,7 @@ gulp.task('image-min', function () {
               ]
           })
       ]))
-        .pipe(gulp.dest('./assets/img-opt/'))
+        .pipe(gulp.dest('./img'))
         .pipe(browserSync.stream());
 });
 
@@ -108,10 +108,10 @@ gulp.task('run', ['sass', 'minify-css', 'compressJS', 'scripts', 'image-min', 'b
 
 gulp.task('watch', function () {
   gulp.watch(paths.sass.src, ['sass']);
-  gulp.watch('./dist/clean/css/*.css', ['minify-css']);
-  gulp.watch('./dist/clean/js/plugins/*.js', ['compressJS']);
-  gulp.watch('./dist/min/js/plugins/*.js', ['scripts']);
-  gulp.watch('./assets/img/*.*', ['image-min']);
+  gulp.watch('./build/css/*.css', ['minify-css']);
+  gulp.watch('./src/pluginsJS/*.js', ['compressJS']);
+  gulp.watch('./build/js/*.js', ['scripts']);
+  gulp.watch('./src/img/*.*', ['image-min']);
   gulp.watch('./*.html', browserSync.reload);
 });
 
