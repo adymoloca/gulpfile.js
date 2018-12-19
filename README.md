@@ -7,6 +7,8 @@ Install NodeJS
   Go to https://nodejs.org/en/ and download the latest verions. AFter that install it like any other program.
 
 Install Gulp @3.9.1
+
+
   1.) Open your terminal and go in your project folder using the "cd.." command
   
   2.) Write this code : "npm install gulp@3.9.1" if you are using Windows or "sudo npm install gulp@3.9.1" if you are using MacOS and hit Enter
